@@ -3,42 +3,19 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
-  const isLoggedIn = !!localStorage.getItem("access_token");
-
-  if (!isLoggedIn) return null;
 
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem("access_token");
     navigate("/");
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-      <div className="container-fluid">
-        <div className="collapse navbar-collapse">
-          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link to="/home" className="nav-link">
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/about" className="nav-link">
-                About
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/profile" className="nav-link">
-                Profile
-              </Link>
-            </li>
-            <li className="nav-item">
-              <button onClick={handleLogout} className="btn btn-danger ms-3">
-                Logout
-              </button>
-            </li>
-          </ul>
-        </div>
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div className="container-fluid justify-content-end">
+        <Link to="/home" className="btn btn-outline-light me-2">Home</Link>
+        <Link to="/about" className="btn btn-outline-light me-2">About</Link>
+        <Link to="/profile" className="btn btn-outline-light me-2">Profile</Link>
+        <button onClick={handleLogout} className="btn btn-danger">Logout</button>
       </div>
     </nav>
   );
