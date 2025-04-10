@@ -1,31 +1,11 @@
 // src/components/Home.jsx
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getUser } from "../services/api";
 import FooterMenu from "./FooterMenu";
+import useAuthGuard from "../hooks/useAuthGuard";
 
 const Home = () => {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    const csrf = document.cookie.split('csrftoken=')[1]?.split(';')[0];
-
-    getUser(token, csrf).then(async res => {
-      if (res.status === 200) {
-        const data = await res.json();
-        setUser(data);
-      } else if (res.status === 401) {
-        // Logout and redirect to login
-        localStorage.clear();
-        // Optionally clear cookies here if required
-        navigate("/");
-      } else {
-        navigate("/");
-      }
-    });
-  }, []);
+  const user = useAuthGuard();
+  if (!user) return null;
 
   return (
     <div>
