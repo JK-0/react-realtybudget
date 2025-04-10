@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../services/auth";
+import FooterMenu from "./FooterMenu";
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -11,27 +12,26 @@ const Home = () => {
     const csrf = document.cookie.split('csrftoken=')[1]?.split(';')[0];
 
     getUser(token, csrf).then(async res => {
-      if (res.ok) {
+      if (res.status === 200) {
         const data = await res.json();
         setUser(data);
+      } else if (res.status === 401) {
+        // Logout and redirect to login
+        localStorage.clear();
+        // Optionally clear cookies here if required
+        navigate("/");
       } else {
         navigate("/");
       }
     });
   }, []);
 
-  const logout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
-
   return (
     <div>
       <h2>Welcome Home</h2>
       <pre>{JSON.stringify(user, null, 2)}</pre>
       <pre>{JSON.stringify(user, null, 2)}</pre>
-
-      <button onClick={logout}>Logout</button>
+      <FooterMenu />
     </div>
   );
 };
