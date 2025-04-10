@@ -45,9 +45,17 @@ const Sidebar = () => {
 
         <li className="nav-item mt-4 fw-bold">📁 Projects</li>
         {projects.map((project) => (
-          <li key={project.id} className="nav-item mb-1">
-            <Link to={`/project/${project.id}`} className="nav-link">
-              {project.project_name}
+          <li key={project.id} className="nav-item mb-2">
+            <Link to={`/project/${project.id}`} className="nav-link d-flex align-items-center">
+              <img
+                src={project.project_logo || "https://via.placeholder.com/24x24?text=🗂️"}
+                alt="logo"
+                className="me-2 rounded"
+                width={24}
+                height={24}
+                style={{ objectFit: "cover" }}
+              />
+              <span style={{ fontSize: "0.9rem" }}>{project.project_name}</span>
             </Link>
           </li>
         ))}
