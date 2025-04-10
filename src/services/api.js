@@ -1,7 +1,7 @@
 const BASE = import.meta.env.VITE_API_BASE;
 
 export const sendOtp = async (email, csrfToken) => {
-  return fetch(`${BASE}/login/email/otp/`, {
+  return fetch(`${BASE}/auth/api/login/email/otp/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -13,7 +13,7 @@ export const sendOtp = async (email, csrfToken) => {
 };
 
 export const validateOtp = async (email, otp, csrfToken) => {
-  return fetch(`${BASE}/login/email/otp/validate/`, {
+  return fetch(`${BASE}/auth/api/login/email/otp/validate/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,7 +25,18 @@ export const validateOtp = async (email, otp, csrfToken) => {
 };
 
 export const getUser = async (accessToken, csrfToken) => {
-  return fetch(`${BASE}/me/`, {
+  return fetch(`${BASE}/auth/api/me/`, {
+    method: "GET",
+    headers: {
+      "CAuthorization": `Bearer ${accessToken}`,
+      "X-CSRFToken": csrfToken,
+      accept: "application/json",
+    },
+  });
+};
+
+export const getProjxList = async (accessToken, csrfToken) => {
+  return fetch(`${BASE}/project/api/list/`, {
     method: "GET",
     headers: {
       "CAuthorization": `Bearer ${accessToken}`,
