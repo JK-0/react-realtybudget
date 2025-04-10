@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { sendOtp } from "../services/auth";
+import { sendOtp } from "../services/api";
 
 const EmailStep = () => {
   const [email, setEmail] = useState("");

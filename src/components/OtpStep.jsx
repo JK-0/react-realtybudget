@@ -1,6 +1,7 @@
+// src/components/OtpStep.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { validateOtp } from "../services/auth";
+import { validateOtp } from "../services/api";
 
 const OtpStep = () => {
   const [otp, setOtp] = useState("");

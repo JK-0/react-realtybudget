@@ -1,3 +1,4 @@
+// src/components/PublicRoute.jsx
 import { Navigate } from "react-router-dom";
 import Footer from "./Footer";
 

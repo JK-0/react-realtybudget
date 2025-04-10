@@ -1,6 +1,7 @@
+// src/components/Home.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../services/auth";
+import { getUser } from "../services/api";
 import FooterMenu from "./FooterMenu";
 
 const Home = () => {
