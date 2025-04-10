@@ -7,6 +7,8 @@ import Profile from "./components/Profile";
 import About from "./components/About";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
+import ProjectDetail from "./components/ProjectDetail"; // ⬅️ Import this
+import CreateProject from "./components/CreateProject";
 
 const AppRoutes = () => {
 
@@ -52,6 +54,22 @@ const AppRoutes = () => {
         element={
           <PrivateRoute>
             <About />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/project/:id"
+        element={
+          <PrivateRoute>
+            <ProjectDetail />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/project/create"
+        element={
+          <PrivateRoute>
+            <CreateProject />
           </PrivateRoute>
         }
       />

@@ -60,7 +60,11 @@ const Sidebar = () => {
           </li>
         ))}
 
-
+        <li className="nav-item mt-3">
+          <Link to="/project/create" className="btn btn-sm btn-primary w-100">
+            ➕ Create Project
+          </Link>
+        </li>
       </ul>
     </div>
   );

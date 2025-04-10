@@ -45,3 +45,39 @@ export const getProjxList = async (accessToken, csrfToken) => {
     },
   });
 };
+
+export const getProjectById = async (id, accessToken, csrfToken) => {
+  return fetch(`${BASE}/project/api/get/${id}/`, {
+    method: "GET",
+    headers: {
+      "CAuthorization": `Bearer ${accessToken}`,
+      "X-CSRFToken": csrfToken,
+      accept: "application/json",
+    },
+  });
+};
+
+export const updateProject = async (id, formData, accessToken, csrfToken) => {
+  return fetch(`${BASE}/project/api/update/${id}/`, {
+    method: "PUT",
+    headers: {
+      "CAuthorization": `Bearer ${accessToken}`,
+      "X-CSRFToken": csrfToken,
+      accept: "application/json",
+    },
+    body: formData, // Must be FormData, not JSON
+  });
+};
+
+export const createProject = async (formData, accessToken, csrfToken) => {
+  const BASE = import.meta.env.VITE_API_BASE;
+  return fetch(`${BASE}/project/api/create/`, {
+    method: "POST",
+    headers: {
+      "CAuthorization": `Bearer ${accessToken}`,
+      "X-CSRFToken": csrfToken,
+      accept: "application/json",
+    },
+    body: formData,
+  });
+};
