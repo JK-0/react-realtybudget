@@ -9,6 +9,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import ProjectDetail from "./components/ProjectDetail"; // ⬅️ Import this
 import CreateProject from "./components/CreateProject";
+import Transactions from "./components/Transactions";
 
 const AppRoutes = () => {
 
@@ -70,6 +71,14 @@ const AppRoutes = () => {
         element={
           <PrivateRoute>
             <CreateProject />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/project/:id/transactions"
+        element={
+          <PrivateRoute>
+            <Transactions />
           </PrivateRoute>
         }
       />

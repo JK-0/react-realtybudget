@@ -1,34 +1,9 @@
 // src/components/Sidebar.jsx
 import { Link } from "react-router-dom";
 import { useProjectContext } from "../context/ProjectContext";
-// import { getProjxList } from "../services/api";
-// import { useEffect, useState } from "react";
 
 const Sidebar = () => {
   const { projects } = useProjectContext();
-
-  // const [projects, setProjects] = useState([]);
-  // useEffect(() => {
-  //   const token = localStorage.getItem("access_token");
-  //   const csrf = document.cookie.split("csrftoken=")[1]?.split(";")[0];
-
-  //   if (!token) return;
-
-  //   getProjxList(token, csrf)
-  //     .then(async (res) => {
-  //       if (res.status === 200) {
-  //         const json = await res.json();
-  //         setProjects(json.data || []);
-  //       } else if (res.status === 401) {
-  //         localStorage.clear();
-  //         window.location.href = "/";
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.error("Failed to fetch project list", err);
-  //     });
-  // }, []);
-
 
   return (
     <div
@@ -54,8 +29,8 @@ const Sidebar = () => {
 
         <li className="nav-item mt-4 fw-bold">📁 Projects</li>
         {projects.map((project) => (
-          <li key={project.id} className="nav-item mb-2">
-            <Link to={`/project/${project.id}`} className="nav-link d-flex align-items-center">
+          <li key={project.id} className="nav-item mb-2 d-flex align-items-center">
+            <Link to={`/project/${project.id}`}>
               <img
                 src={project.project_logo || "https://cdn-icons-png.flaticon.com/24/2991/2991112.png"}
                 alt="logo"
@@ -64,7 +39,13 @@ const Sidebar = () => {
                 height={24}
                 style={{ objectFit: "cover" }}
               />
-              <span style={{ fontSize: "0.9rem" }}>{project.project_name}</span>
+            </Link>
+            <Link
+              to={`/project/${project.id}/transactions`}
+              className="nav-link p-0"
+              style={{ fontSize: "0.9rem" }}
+            >
+              {project.project_name}
             </Link>
           </li>
         ))}

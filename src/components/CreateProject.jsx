@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createProject as createProjectAPI } from "../services/api";
-import { useProjects } from "../context/ProjectContext";
+import { useProjectContext } from "../context/ProjectContext";
 
 const CreateProject = () => {
   const navigate = useNavigate();
-  const { fetchProjects } = useProjects();
+  const { fetchProjects } = useProjectContext();
 
   const [formData, setFormData] = useState({
     project_name: "",
