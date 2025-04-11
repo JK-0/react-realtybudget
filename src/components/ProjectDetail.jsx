@@ -1,7 +1,9 @@
 // src/components/ProjectDetail.jsx
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getProjectById, updateProject } from "../services/api";
+import { getProjectById, updateProject, deleteProject } from "../services/api";
+import { useProjectContext } from "../context/ProjectContext";
+
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -14,6 +16,8 @@ const ProjectDetail = () => {
   });
   const [logoPreview, setLogoPreview] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { fetchProjects } = useProjectContext();
+  const navigate = useNavigate();
 
   const accessToken = localStorage.getItem("access_token");
   const csrfToken = localStorage.getItem("csrf_token");
@@ -75,12 +79,31 @@ const ProjectDetail = () => {
       const res = await response.json();
       alert("Project updated successfully!");
       console.log("Update response:", res);
+      await fetchProjects(); // ✅ Refresh sidebar
+      navigate("/home");
+
     } catch (err) {
       console.error("Update error:", err);
       alert("Error updating project.");
     }
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this project?")) return;
+  
+    try {
+      const response = await deleteProject(id, accessToken, csrfToken);
+      if (!response.ok) throw new Error("Delete failed");
+  
+      alert("Project deleted successfully!");
+      await fetchProjects(); // ✅ Refresh sidebar
+      navigate("/home");
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("Error deleting project.");
+    }
+  };
+  
   return (
     <div className="container mt-4">
       <h2 className="mb-3">Project Detail</h2>
@@ -161,6 +184,14 @@ const ProjectDetail = () => {
             >
               Update Project
             </button>
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={handleDelete}
+            >
+              Delete Project
+            </button>
+
           </div>
         </form>
       ) : (

@@ -1,12 +1,15 @@
 // src/App.jsx
 import { BrowserRouter as Router } from "react-router-dom";
 import AppRoutes from "./routes";
+import { ProjectProvider } from "./context/ProjectContext";
 
 function App() {
   return (
-    <Router>
-      <AppRoutes />
-    </Router>
+    <ProjectProvider>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </ProjectProvider>
   );
 }
 

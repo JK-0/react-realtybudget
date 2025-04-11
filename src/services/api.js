@@ -81,3 +81,14 @@ export const createProject = async (formData, accessToken, csrfToken) => {
     body: formData,
   });
 };
+
+export const deleteProject = async (id, accessToken, csrfToken) => {
+  return fetch(`${BASE}/project/api/delete/${id}/`, {
+    method: "DELETE",
+    headers: {
+      "CAuthorization": `Bearer ${accessToken}`,
+      "X-CSRFToken": csrfToken,
+      accept: "application/json",
+    },
+  });
+};

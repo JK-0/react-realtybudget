@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createProject as createProjectAPI } from "../services/api";
+import { useProjects } from "../context/ProjectContext";
 
 const CreateProject = () => {
   const navigate = useNavigate();
+  const { fetchProjects } = useProjects();
 
   const [formData, setFormData] = useState({
     project_name: "",
@@ -59,6 +61,7 @@ const CreateProject = () => {
       if (response.ok && json.success === 1) {
         alert("Project created successfully!");
         navigate(`/project/${json.data.id}`);
+        await fetchProjects(); // ✅ Refresh sidebar
       } else {
         alert("Failed to create project.");
       }
