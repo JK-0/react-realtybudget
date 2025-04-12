@@ -2,11 +2,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { validateOtp } from "../services/api";
+import { useProjectContext } from "../context/ProjectContext";
 
 const OtpStep = () => {
   const [otp, setOtp] = useState("");
   const email = localStorage.getItem("email");
   const navigate = useNavigate();
+  const { fetchProjects } = useProjectContext();
 
   const handleSubmit = async () => {
     const csrf = document.cookie.split('csrftoken=')[1]?.split(';')[0];
@@ -14,6 +16,7 @@ const OtpStep = () => {
     const data = await res.json();
     if (res.ok && data.access_token) {
       localStorage.setItem("access_token", data.access_token);
+      await fetchProjects(); // ✅ Refresh sidebar
       navigate("/home");
     }
   };

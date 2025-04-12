@@ -92,3 +92,29 @@ export const deleteProject = async (id, accessToken, csrfToken) => {
     },
   });
 };
+
+export const getTransactionsByProject = async (projectId, accessToken, csrfToken) => {
+  return fetch(`${BASE}/transaction/api/list/?project=${projectId}`, {
+    method: "GET",
+    headers: {
+      "CAuthorization": `Bearer ${accessToken}`,
+      "X-CSRFToken": csrfToken,
+      accept: "application/json",
+    },
+  });
+};
+
+export const createTransaction = async (formDataObj, accessToken, csrfToken) => {
+  const formBody = new URLSearchParams(formDataObj).toString();
+
+  return fetch(`${BASE}/transaction/api/create/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "CAuthorization": `Bearer ${accessToken}`,
+      "X-CSRFToken": csrfToken,
+      accept: "application/json",
+    },
+    body: formBody,
+  });
+};
