@@ -134,31 +134,33 @@ const TransactionsCreate = () => {
   ];
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h2 className="mb-4 text-xl font-semibold">Create Transaction</h2>
+    <div className="container mt-4">
+      <h2 className="mb-4 text-center">Create Transaction</h2>
 
-      {error && <div className="mb-2 text-red-600">{error}</div>}
+      {error && <div className="alert alert-danger mb-3">{error}</div>}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block mb-1">Amount</label>
+      <form onSubmit={handleSubmit} className="form-group">
+        <div className="mb-3">
+          <label htmlFor="amount" className="form-label">Amount</label>
           <input
             type="number"
+            id="amount"
             name="amount"
             value={form.amount}
             onChange={handleChange}
             required
-            className="w-full border rounded px-3 py-2"
+            className="form-control"
           />
         </div>
 
-        <div>
-          <label className="block mb-1">Transaction Type</label>
+        <div className="mb-3">
+          <label htmlFor="transaction_type" className="form-label">Transaction Type</label>
           <select
+            id="transaction_type"
             name="transaction_type"
             value={form.transaction_type}
             onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
+            className="form-select"
           >
             <option value="in">In</option>
             <option value="out">Out</option>
@@ -166,13 +168,14 @@ const TransactionsCreate = () => {
         </div>
 
         {form.transaction_type === "in" && (
-          <div>
-            <label className="block mb-1">Transaction Sub Type (In)</label>
+          <div className="mb-3">
+            <label htmlFor="transaction_sub_in" className="form-label">Transaction Sub Type (In)</label>
             <select
+              id="transaction_sub_in"
               name="transaction_sub_in"
               value={form.transaction_sub_in}
               onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
+              className="form-select"
             >
               {transactionSubInOptions.map(option => (
                 <option key={option.value} value={option.value}>
@@ -184,13 +187,14 @@ const TransactionsCreate = () => {
         )}
 
         {form.transaction_type === "out" && (
-          <div>
-            <label className="block mb-1">Transaction Sub Type (Out)</label>
+          <div className="mb-3">
+            <label htmlFor="transaction_sub_out" className="form-label">Transaction Sub Type (Out)</label>
             <select
+              id="transaction_sub_out"
               name="transaction_sub_out"
               value={form.transaction_sub_out}
               onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
+              className="form-select"
             >
               {transactionSubOutOptions.map(option => (
                 <option key={option.value} value={option.value}>
@@ -201,27 +205,27 @@ const TransactionsCreate = () => {
           </div>
         )}
 
-        <div>
-          <label className="block mb-1">Tags</label>
+        <div className="mb-3">
+          <label htmlFor="tags" className="form-label">Tags</label>
           <Select
             isMulti
             options={tags}
             value={tags.filter(tag => form.tags.includes(tag.value))}
             onChange={handleTagsChange}
             getOptionLabel={(option) => option.label}
-            className="w-full"
+            className="form-control"
             placeholder="Select tags..."
           />
         </div>
 
-        <div>
-          <label className="block mb-1">Contributor</label>
+        <div className="mb-3">
+          <label htmlFor="contributor" className="form-label">Contributor</label>
           <Select
             options={contributors}
             value={contributors.find(contributor => contributor.value === form.contributor) || null}
             onChange={handleContributorChange}
             getOptionLabel={(option) => option.label}
-            className="w-full"
+            className="form-control"
             placeholder="Select contributor..."
           />
         </div>
@@ -229,7 +233,7 @@ const TransactionsCreate = () => {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="btn btn-primary w-100"
         >
           {loading ? "Creating..." : "Create Transaction"}
         </button>

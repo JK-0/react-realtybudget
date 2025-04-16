@@ -75,17 +75,34 @@ const Tags = () => {
       {isLoading ? (
         <p>Loading tags...</p>
       ) : (
-        <ul>
-          {tags.length > 0 ? (
-            tags.map((tag) => (
-              <li key={tag.id}>
-                <strong>{tag.tag_name}</strong>: {tag.description}
-              </li>
-            ))
-          ) : (
-            <p>No tags available.</p>
-          )}
-        </ul>
+        <div className="table-responsive">
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>Tag Name</th>
+                <th>Description</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tags.length > 0 ? (
+                tags.map((tag) => (
+                  <tr key={tag.id}>
+                    <td>{tag.tag_name}</td>
+                    <td>{tag.description}</td>
+                    <td>{new Date(tag.created_at).toLocaleString()}</td>
+                    <td>{new Date(tag.updated_at).toLocaleString()}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4">No tags available.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

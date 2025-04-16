@@ -53,15 +53,32 @@ const Transactions = () => {
       {!loading && transactions.length === 0 && <p>No transactions found.</p>}
 
       {transactions.length > 0 && (
-        <ul className="list-group">
-          {transactions.map((txn) => (
-            <li key={txn.id} className="list-group-item">
-              <strong>{txn.description || "Untitled"}</strong> - ₹{txn.amount}
-              <br />
-              <small>{txn.created_at}</small>
-            </li>
-          ))}
-        </ul>
+        <div className="table-responsive">
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                {/* <th>Transaction ID</th> */}
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Sub Type</th>
+                <th>Description</th>
+                <th>Created At</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.map((txn) => (
+                <tr key={txn.id}>
+                  {/* <td>{txn.id}</td> */}
+                  <td>₹{txn.amount}</td>
+                  <td>{txn.transaction_type}</td>
+                  <td>{txn.transaction_sub_in}</td>
+                  <td>{txn.description || "Untitled"}</td>
+                  <td>{new Date(txn.created_at).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
