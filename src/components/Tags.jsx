@@ -1,7 +1,7 @@
 // src/components/Tags.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";  // Import useNavigate
-import { getTagsByProject, createTag } from "../services/api";
+import { getTagsByProject, deleteTag } from "../services/api";
 
 const Tags = () => {
   const { id } = useParams(); // Get the project ID from the URL
@@ -58,6 +58,27 @@ const Tags = () => {
     navigate(`/project/${id}/tags/create`);  // Redirect to the create tag page with project id
   };
 
+  // Handle delete tag action
+  const handleDeleteTag = async (tagId) => {
+    const { csrfToken, accessToken } = getTokens();
+    if (!window.confirm("Delete this tag?")) return;
+    try {
+      const response = await deleteTag(tagId, csrfToken, accessToken);
+      if (response.ok) {
+        setTags(tags.filter(tag => tag.id !== tagId));
+      } else {
+        setError("Failed to delete tag.");
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  // Handle edit tag action (redirect to edit tag page with project id and tag id)
+  const handleEditTag = (tagId) => {
+    navigate(`/project/${id}/tags/edit/${tagId}`);
+  };
+
   return (
     <div className="container mt-4">
       <h2 className="mb-3">Tags for Project ID: {id}</h2>
@@ -83,6 +104,7 @@ const Tags = () => {
                 <th>Description</th>
                 <th>Created At</th>
                 <th>Updated At</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -93,11 +115,28 @@ const Tags = () => {
                     <td>{tag.description}</td>
                     <td>{new Date(tag.created_at).toLocaleString()}</td>
                     <td>{new Date(tag.updated_at).toLocaleString()}</td>
+                    <td>
+                      {/* Edit Button */}
+                      <button
+                        className="btn btn-sm btn-warning me-2"
+                        onClick={() => handleEditTag(tag.id)}
+                      >
+                        Edit
+                      </button>
+
+                      {/* Delete Button */}
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => handleDeleteTag(tag.id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4">No tags available.</td>
+                  <td colSpan="5">No tags available.</td>
                 </tr>
               )}
             </tbody>

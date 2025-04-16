@@ -1,7 +1,7 @@
 // src/components/Transactions.jsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getTransactionsByProject } from "../services/api";
+import { getTransactionsByProject, deleteTransaction } from "../services/api";
 
 const Transactions = () => {
   const { id } = useParams();
@@ -34,27 +34,41 @@ const Transactions = () => {
     fetchTransactions();
   }, [id, accessToken, csrfToken]);
 
+  // Handle delete transaction
+  const handleDelete = async (txnId) => {
+    if (!window.confirm("Are you sure you want to delete this transaction?")) return;
+    try {
+      const res = await deleteTransaction(txnId, accessToken, csrfToken);
+      if (res.ok) {
+        setTransactions(transactions.filter((txn) => txn.id !== txnId));
+      } else {
+        alert("Failed to delete transaction.");
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("An error occurred.");
+    }
+  };
+
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">
-          Transactions for Project ID: {id}
-        </h2>
+    <div className="container mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h2>Transactions for Project ID: {id}</h2>
         <button
           onClick={() => navigate(`/project/${id}/transactions/create`)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="btn btn-primary"
         >
-          Create Transaction
+          ➕ Create Transaction
         </button>
       </div>
 
       {loading && <p>Loading...</p>}
-      {error && <div className="text-red-600">{error}</div>}
+      {error && <div className="alert alert-danger">{error}</div>}
       {!loading && transactions.length === 0 && <p>No transactions found.</p>}
 
       {transactions.length > 0 && (
         <div className="table-responsive">
-          <table className="table table-bordered">
+          <table className="table table-striped">
             <thead>
               <tr>
                 {/* <th>Transaction ID</th> */}
@@ -63,6 +77,7 @@ const Transactions = () => {
                 <th>Sub Type</th>
                 <th>Description</th>
                 <th>Created At</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -74,6 +89,22 @@ const Transactions = () => {
                   <td>{txn.transaction_sub_in}</td>
                   <td>{txn.description || "Untitled"}</td>
                   <td>{new Date(txn.created_at).toLocaleString()}</td>
+                  <td>
+                    <button
+                      onClick={() =>
+                        navigate(`/project/${id}/transactions/${txn.id}/edit`)
+                      }
+                      className="btn btn-sm btn-warning me-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(txn.id)}
+                      className="btn btn-sm btn-danger"
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

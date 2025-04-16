@@ -174,3 +174,36 @@ export const createContributor = async (formData, accessToken, csrfToken) => {
     body: formData, // formData should include all fields and file as FormData
   });
 };
+
+export const deleteTag = async (tagId, csrfToken, accessToken) => {
+  return fetch(`${BASE}/tag/api/delete/${tagId}/`, {
+    method: "DELETE",
+    headers: {
+      "accept": "application/json",
+      "CAuthorization": `Bearer ${accessToken}`,
+      "X-CSRFToken": csrfToken,
+    },
+  });
+};
+
+export const deleteTransaction = (id, accessToken, csrfToken) => {
+  return fetch(`${BASE}/transaction/api/delete/${id}/`, {
+    method: "DELETE",
+    headers: {
+      "Accept": "application/json",
+      "CAuthorization": `Bearer ${accessToken}`,
+      "X-CSRFToken": csrfToken,
+    },
+  });
+};
+
+export const deleteContributor = (id, accessToken, csrfToken) => {
+  return fetch(`${BASE}/contributor/api/delete/${id}/`, {
+    method: "DELETE",
+    headers: {
+      "Accept": "application/json",
+      "CAuthorization": `Bearer ${accessToken}`,
+      "X-CSRFToken": csrfToken,
+    },
+  });
+};
