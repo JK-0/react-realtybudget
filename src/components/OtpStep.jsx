@@ -22,10 +22,21 @@ const OtpStep = () => {
   };
 
   return (
-    <div>
-      <h2>Enter OTP</h2>
-      <input value={otp} onChange={e => setOtp(e.target.value)} placeholder="Enter OTP" />
-      <button onClick={handleSubmit}>Verify OTP</button>
+    <div className="d-flex vh-100 justify-content-center align-items-center">
+      <div className="card p-4" style={{ width: "100%", maxWidth: "400px" }}>
+        <h2 className="mb-3 text-center">Enter OTP</h2>
+        <input
+          value={otp}
+          onChange={e => setOtp(e.target.value)}
+          placeholder="Enter OTP"
+          className="form-control mb-3"
+          type="text"
+          required
+        />
+        <button onClick={handleSubmit} className="btn btn-primary w-100">
+          Verify OTP
+        </button>
+      </div>
     </div>
   );
 };
