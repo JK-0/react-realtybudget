@@ -11,6 +11,8 @@ import ProjectDetail from "./components/ProjectDetail"; // ⬅️ Import this
 import CreateProject from "./components/CreateProject";
 import Transactions from "./components/Transactions";
 import TransactionsCreate from "./components/TransactionsCreate";
+import Tags from "./components/Tags"; // ⬅️ Import the Tags component
+import CreateTag from "./components/CreateTag";
 
 const AppRoutes = () => {
 
@@ -88,6 +90,22 @@ const AppRoutes = () => {
         element={
           <PrivateRoute>
             <TransactionsCreate />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/project/:id/tags"
+        element={
+          <PrivateRoute>
+            <Tags />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/project/:id/tags/create"
+        element={
+          <PrivateRoute>
+            <CreateTag />
           </PrivateRoute>
         }
       />

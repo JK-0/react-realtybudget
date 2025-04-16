@@ -30,7 +30,7 @@ const Sidebar = () => {
         <li className="nav-item mt-4 fw-bold">📁 Projects</li>
         {projects.map((project) => (
           <li key={project.id} className="nav-item mb-2 d-flex align-items-center">
-            <Link to={`/project/${project.id}`}>
+            <Link to={`/project/${project.id}`} className="nav-link p-0">
               <img
                 src={project.project_logo || "https://cdn-icons-png.flaticon.com/24/2991/2991112.png"}
                 alt="logo"
@@ -39,12 +39,6 @@ const Sidebar = () => {
                 height={24}
                 style={{ objectFit: "cover" }}
               />
-            </Link>
-            <Link
-              to={`/project/${project.id}/transactions`}
-              className="nav-link p-0"
-              style={{ fontSize: "0.9rem" }}
-            >
               {project.project_name}
             </Link>
           </li>
