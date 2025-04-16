@@ -151,3 +151,26 @@ export const getTagsByProject = async (projectId, csrfToken, accessToken) => {
     },
   });
 };
+
+export const getContributorsByProject = async (projectId, accessToken, csrfToken) => {
+  return fetch(`${BASE}/contributor/api/list/?project=${projectId}`, {
+    method: "GET",
+    headers: {
+      "CAuthorization": `Bearer ${accessToken}`,
+      "X-CSRFToken": csrfToken,
+      accept: "application/json",
+    },
+  });
+};
+
+export const createContributor = async (formData, accessToken, csrfToken) => {
+  return fetch(`${BASE}/contributor/api/create/`, {
+    method: "POST",
+    headers: {
+      "CAuthorization": `Bearer ${accessToken}`,
+      "X-CSRFToken": csrfToken,
+      accept: "application/json",
+    },
+    body: formData, // formData should include all fields and file as FormData
+  });
+};

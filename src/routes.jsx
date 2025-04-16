@@ -13,6 +13,8 @@ import Transactions from "./components/Transactions";
 import TransactionsCreate from "./components/TransactionsCreate";
 import Tags from "./components/Tags"; // ⬅️ Import the Tags component
 import CreateTag from "./components/CreateTag";
+import Contributor from "./components/Contributor"; // New Component
+import CreateContributor from "./components/CreateContributor"; // New Component
 
 const AppRoutes = () => {
 
@@ -109,6 +111,23 @@ const AppRoutes = () => {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/project/:id/contributor"
+        element={
+          <PrivateRoute>
+            <Contributor />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/project/:id/contributor/create"
+        element={
+          <PrivateRoute>
+            <CreateContributor />
+          </PrivateRoute>
+        }
+      />
+
     </Routes>
   );
 };

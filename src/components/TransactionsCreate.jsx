@@ -1,7 +1,8 @@
-// components/TransactionsCreate.jsx
-import { useState } from "react";
+// src/components/TransactionsCreate.jsx
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createTransaction } from "../services/api";
+import { createTransaction, getTagsByProject, getContributorsByProject } from "../services/api";
+import Select from "react-select";  // Import React Select for multi-select dropdown
 
 const TransactionsCreate = () => {
   const { id: projectId } = useParams();
@@ -9,15 +10,58 @@ const TransactionsCreate = () => {
 
   const [form, setForm] = useState({
     amount: "",
-    transaction_type: "in",
-    transaction_sub_in: "cash",
+    transaction_type: "in", // Default to "in"
+    transaction_sub_in: "cash", // Default to "cash" for "in" transaction type
+    tags: [],  // Store selected tags
+    contributor: null,  // Store selected contributor
   });
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [tags, setTags] = useState([]);  // Store available tags for the project
+  const [contributors, setContributors] = useState([]);  // Store available contributors for the project
   const csrfToken = document.cookie.split("csrftoken=")[1]?.split(";")[0];
   const accessToken = localStorage.getItem("access_token");
+
+  // Fetch tags and contributors when component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch tags
+        const tagsResponse = await getTagsByProject(projectId, csrfToken, accessToken);
+        if (tagsResponse.ok) {
+          const tagsData = await tagsResponse.json();
+          setTags(
+            tagsData?.data?.map(tag => ({
+              value: tag.id,
+              label: tag.tag_name,
+            })) || []
+          );
+        } else {
+          setError("Failed to load tags.");
+        }
+
+        // Fetch contributors
+        const contributorsResponse = await getContributorsByProject(projectId, accessToken, csrfToken);
+        if (contributorsResponse.ok) {
+          const contributorsData = await contributorsResponse.json();
+          setContributors(
+            contributorsData?.data?.map(contributor => ({
+              value: contributor.id,
+              label: contributor.name,
+            })) || []
+          );
+        } else {
+          setError("Failed to load contributors.");
+        }
+      } catch (err) {
+        console.error(err);
+        setError("An error occurred while fetching data.");
+      }
+    };
+
+    fetchData();
+  }, [projectId, csrfToken, accessToken]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,16 +71,41 @@ const TransactionsCreate = () => {
     }));
   };
 
+  const handleTagsChange = (selectedTags) => {
+    setForm((prev) => ({
+      ...prev,
+      tags: selectedTags ? selectedTags.map(tag => tag.value) : [],
+    }));
+  };
+
+  const handleContributorChange = (selectedContributor) => {
+    setForm((prev) => ({
+      ...prev,
+      contributor: selectedContributor ? selectedContributor.value : null,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-      const payload = {
-        ...form,
-        project: projectId,
-      };
+      const payload = new URLSearchParams();
+
+      // Add other fields to the payload
+      payload.append('amount', form.amount);
+      payload.append('transaction_type', form.transaction_type);
+      payload.append('transaction_sub_in', form.transaction_sub_in);
+      payload.append('project', projectId);
+
+      // Add selected tags as separate 'tags' key-value pairs
+      form.tags.forEach(tagId => {
+        payload.append('tags', tagId);
+      });
+
+      // Add selected contributor
+      payload.append('contributor', form.contributor);
 
       const res = await createTransaction(payload, accessToken, csrfToken);
       if (res.ok) {
@@ -52,6 +121,17 @@ const TransactionsCreate = () => {
       setLoading(false);
     }
   };
+
+  // Fixed options for `transaction_sub_in` and `transaction_sub_out`
+  const transactionSubInOptions = [
+    { value: "cash", label: "Cash" },
+    { value: "bank", label: "Bank" },
+  ];
+
+  const transactionSubOutOptions = [
+    { value: "expense", label: "Expense" },
+    { value: "payment", label: "Payment" },
+  ];
 
   return (
     <div className="p-4 max-w-md mx-auto">
@@ -87,19 +167,64 @@ const TransactionsCreate = () => {
 
         {form.transaction_type === "in" && (
           <div>
-            <label className="block mb-1">Transaction Sub In</label>
+            <label className="block mb-1">Transaction Sub Type (In)</label>
             <select
               name="transaction_sub_in"
               value={form.transaction_sub_in}
               onChange={handleChange}
               className="w-full border rounded px-3 py-2"
             >
-              <option value="cash">Cash</option>
-              <option value="bank">Bank</option>
-              <option value="upi">UPI</option>
+              {transactionSubInOptions.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </div>
         )}
+
+        {form.transaction_type === "out" && (
+          <div>
+            <label className="block mb-1">Transaction Sub Type (Out)</label>
+            <select
+              name="transaction_sub_out"
+              value={form.transaction_sub_out}
+              onChange={handleChange}
+              className="w-full border rounded px-3 py-2"
+            >
+              {transactionSubOutOptions.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <div>
+          <label className="block mb-1">Tags</label>
+          <Select
+            isMulti
+            options={tags}
+            value={tags.filter(tag => form.tags.includes(tag.value))}
+            onChange={handleTagsChange}
+            getOptionLabel={(option) => option.label}
+            className="w-full"
+            placeholder="Select tags..."
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1">Contributor</label>
+          <Select
+            options={contributors}
+            value={contributors.find(contributor => contributor.value === form.contributor) || null}
+            onChange={handleContributorChange}
+            getOptionLabel={(option) => option.label}
+            className="w-full"
+            placeholder="Select contributor..."
+          />
+        </div>
 
         <button
           type="submit"
