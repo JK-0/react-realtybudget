@@ -14,6 +14,7 @@ const TransactionsCreate = () => {
     transaction_sub_in: "cash", // Default to "cash" for "in" transaction type
     tags: [],  // Store selected tags
     contributor: null,  // Store selected contributor
+    description: "", // Store the description of the transaction
   });
 
   const [error, setError] = useState("");
@@ -98,6 +99,7 @@ const TransactionsCreate = () => {
       payload.append('transaction_type', form.transaction_type);
       payload.append('transaction_sub_in', form.transaction_sub_in);
       payload.append('project', projectId);
+      payload.append('description', form.description);  // Add description field
 
       // Add selected tags as separate 'tags' key-value pairs
       form.tags.forEach(tagId => {
@@ -227,6 +229,18 @@ const TransactionsCreate = () => {
             getOptionLabel={(option) => option.label}
             className="form-control"
             placeholder="Select contributor..."
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="description" className="form-label">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            className="form-control"
+            placeholder="Enter a description for the transaction"
           />
         </div>
 
